@@ -33,6 +33,7 @@ async function run() {
         const database = client.db('dynamoDB');
         const brandsCollection = database.collection('brands');
         const productsCollection = database.collection('products');
+        const bannersCollection = database.collection('banners');
 
         app.get('/api/brands', async (req, res) => {
             const cursor = brandsCollection.find();
@@ -42,9 +43,17 @@ async function run() {
         app.get('/api/brands/:brand', async (req, res) => {
             const brand = req.params.brand;
             const query = { brand: brand };
-
             const cursor = productsCollection.find(query);
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/api/banners/:brand', async (req, res) => {
+
+            const brand = req.params.brand;
+            const filter = { name: brand };
+            const options = { projection: { banner_images: 1 } }
+            const result = await bannersCollection.findOne(filter, options)
             res.send(result);
         })
 
