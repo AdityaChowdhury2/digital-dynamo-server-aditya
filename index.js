@@ -29,6 +29,25 @@ async function run() {
         await client.db("admin").command({ ping: 1 });
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+        const database = client.db('dynamoDB');
+        const brandsCollection = database.collection('brands');
+        const productsCollection = database.collection('products');
+
+        app.get('/api/brands', async (req, res) => {
+            const cursor = brandsCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        app.get('/api/brands/:brand', async (req, res) => {
+            const brand = req.params.brand;
+            const query = { brand: brand };
+
+            const cursor = productsCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
     } finally {
 
 
