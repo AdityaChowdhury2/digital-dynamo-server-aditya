@@ -63,7 +63,6 @@ async function run() {
         //add products in database
         app.post('/api/products', async (req, res) => {
             const newProduct = req.body;
-            // console.log(newProduct);
             const result = await productsCollection.insertOne(newProduct);
             res.send(result);
         })
@@ -72,7 +71,6 @@ async function run() {
             const filter = { _id: new ObjectId(id) }
             const result = await productsCollection.findOne(filter);
             res.send(result);
-            // console.log(result);
         })
 
         app.put('/api/product/:productId', async (req, res) => {
@@ -92,17 +90,15 @@ async function run() {
         //user collection apis 
         app.post('/api/user', async (req, res) => {
             const user = req.body;
-            // console.log(user);
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
 
         app.get('/api/user/:userEmail', async (req, res) => {
             const email = req.params.userEmail;
-            // console.log(email);
+
             const filter = { email: email };
             const result = await usersCollection.findOne(filter)
-            // console.log(result);
             res.send(result);
         })
 
