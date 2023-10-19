@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.xs6ettt.mongodb.net/?retryWrites=true&w=majority`;
@@ -34,12 +34,15 @@ async function run() {
         const brandsCollection = database.collection('brands');
         const productsCollection = database.collection('products');
         const bannersCollection = database.collection('banners');
+        const usersCollection = database.collection('users');
 
+        //get brands name and images for homepage
         app.get('/api/brands', async (req, res) => {
             const cursor = brandsCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
+        //get specific brands product
         app.get('/api/brands/:brand', async (req, res) => {
             const brand = req.params.brand;
             const query = { brand: brand };
@@ -48,14 +51,76 @@ async function run() {
             res.send(result);
         })
 
+        //get specific brands banner
         app.get('/api/banners/:brand', async (req, res) => {
-
             const brand = req.params.brand;
             const filter = { name: brand };
             const options = { projection: { banner_images: 1 } }
             const result = await bannersCollection.findOne(filter, options)
             res.send(result);
         })
+
+        //add products in database
+        app.post('/api/products', async (req, res) => {
+            const newProduct = req.body;
+            // console.log(newProduct);
+            const result = await productsCollection.insertOne(newProduct);
+            res.send(result);
+        })
+        app.get('/api/product/:productId', async (req, res) => {
+            const id = req.params.productId;
+            const filter = { _id: new ObjectId(id) }
+            const result = await productsCollection.findOne(filter);
+            res.send(result);
+            // console.log(result);
+        })
+
+        app.put('/api/product/:productId', async (req, res) => {
+            const id = req.params.productId;
+            const filter = { _id: new ObjectId(id) }
+            const updatedProduct = req.body;
+            const newProduct = {
+                $set: {
+                    ...updatedProduct
+                }
+            }
+            const result = await productsCollection.updateOne(filter, newProduct)
+            res.send(result);
+        })
+
+
+        //user collection apis 
+        app.post('/api/user', async (req, res) => {
+            const user = req.body;
+            // console.log(user);
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
+
+        app.get('/api/user/:userEmail', async (req, res) => {
+            const email = req.params.userEmail;
+            // console.log(email);
+            const filter = { email: email };
+            const result = await usersCollection.findOne(filter)
+            // console.log(result);
+            res.send(result);
+        })
+
+        //set cart data in user collection 
+        app.patch('/api/user/:userEmail', async (req, res) => {
+            const email = req.params.userEmail;
+            const filter = { email: email };
+            const newCart = req.body;
+            const updatedUser = {
+                $set: {
+                    cart: newCart
+                }
+            }
+            const result = await usersCollection.updateOne(filter, updatedUser);
+            res.send(result);
+        })
+
+
 
     } finally {
 
