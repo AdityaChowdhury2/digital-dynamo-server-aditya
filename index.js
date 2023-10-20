@@ -21,6 +21,10 @@ const client = new MongoClient(uri, {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send("Welcome to my Digital Dynamo Server!!!");
+})
+
 
 async function run() {
     try {
@@ -83,6 +87,12 @@ async function run() {
                 }
             }
             const result = await productsCollection.updateOne(filter, newProduct)
+            res.send(result);
+        })
+        app.delete('/api/product/:productId', async (req, res) => {
+            const id = req.params.productId;
+            const filter = { _id: new ObjectId(id) }
+            const result = await productsCollection.deleteOne(filter);
             res.send(result);
         })
 
