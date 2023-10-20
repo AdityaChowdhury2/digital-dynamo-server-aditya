@@ -3,7 +3,8 @@ const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.xs6ettt.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.prw6fyz.mongodb.net/?retryWrites=true&w=majority`;
 
 const app = express();
 
@@ -11,7 +12,9 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
-
+app.get('/', (req, res) => {
+    res.send("Welcome to my Digital Dynamo Server!!!");
+})
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -20,11 +23,6 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
-
-app.get('/', (req, res) => {
-    res.send("Welcome to my Digital Dynamo Server!!!");
-})
-
 
 async function run() {
     try {
@@ -125,15 +123,12 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updatedUser);
             res.send(result);
         })
-
-
-
-    } finally {
-
+    } catch (e) {
+        console.log(e);
 
     }
 }
-run().catch(console.dir);
+run()
 
 app.listen(port, (req, res) => {
     console.log("Listening on port " + port);
