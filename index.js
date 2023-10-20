@@ -98,6 +98,7 @@ async function run() {
         //user collection apis 
         app.post('/api/user', async (req, res) => {
             const user = req.body;
+
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
@@ -125,7 +126,6 @@ async function run() {
         })
     } catch (e) {
         console.log(e);
-
     }
 }
 run()
