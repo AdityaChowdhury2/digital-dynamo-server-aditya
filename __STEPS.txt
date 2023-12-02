@@ -1,0 +1,34 @@
+[1] make a.env file to store the necessary environment variables heres example.env file is provided
+[2] require express and create an app like this: 
+const express = require('express');
+const app = express();
+
+[3] create port number like 
+const port = process.env.PORT || 5000
+
+[4] create default.js file in config folder to write this
+require('dotenv').config();
+const config = {
+    LOCAL_CLIENT: process.env.LOCAL_CLIENT,
+    CLIENT: process.env.CLIENT,
+}
+module.exports = config
+
+[5] create applyMiddleware folder to write applyMiddleware function which take app as a parameter and write the middlewares in to it.
+const cors = require('cors')
+const cookieparser = require('cookie-parser')
+const express = require('express')
+const applyMiddleware = (app) => {
+    app.use(cors({
+        origin: []
+    }))
+    app.use(express.json());
+    app.use(cookieparser());
+}
+module.exports = applyMiddleware;
+
+[6] in app.js file call the applyMiddleware(app)
+
+(Optional) to listen the app we can write the app.listen we can do it later
+
+
