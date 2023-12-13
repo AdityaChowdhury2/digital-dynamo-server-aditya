@@ -39,38 +39,38 @@ const bannersCollection = database.collection('banners');
 const usersCollection = database.collection('users');
 
 //get brands name and images for homepage
-app.get('/api/brands', async (req, res) => {
-    try {
-        console.log("api/brands hitted");
-        const cursor = brandsCollection.find();
-        const result = await cursor.toArray();
-        if (!result) {
-            res.status(404).send('data not found');
-        }
-        else {
-            res.send(result);
-        }
-    } catch (error) {
-        res.status(404).send('data not found')
-    }
-})
+// app.get('/api/brands', async (req, res) => {
+//     try {
+//         console.log("api/brands hitted");
+//         const cursor = brandsCollection.find();
+//         const result = await cursor.toArray();
+//         if (!result) {
+//             res.status(404).send('data not found');
+//         }
+//         else {
+//             res.send(result);
+//         }
+//     } catch (error) {
+//         res.status(404).send('data not found')
+//     }
+// })
 //get specific brands product
-app.get('/api/brands/:brand', async (req, res) => {
-    const brand = req.params.brand;
-    const query = { brand: brand };
-    const cursor = productsCollection.find(query);
-    const result = await cursor.toArray();
-    res.send(result);
-})
+// app.get('/api/brands/:brand', async (req, res) => {
+//     const brand = req.params.brand;
+//     const query = { brand: brand };
+//     const cursor = productsCollection.find(query);
+//     const result = await cursor.toArray();
+//     res.send(result);
+// })
 
 //get specific brands banner
-app.get('/api/banners/:brand', async (req, res) => {
-    const brand = req.params.brand;
-    const filter = { name: brand };
-    const options = { projection: { banner_images: 1 } }
-    const result = await bannersCollection.findOne(filter, options)
-    res.send(result);
-})
+// app.get('/api/banners/:brand', async (req, res) => {
+//     const brand = req.params.brand;
+//     const filter = { name: brand };
+//     const options = { projection: { banner_images: 1 } }
+//     const result = await bannersCollection.findOne(filter, options)
+//     res.send(result);
+// })
 
 //add products in database
 app.post('/api/products', async (req, res) => {
@@ -105,12 +105,7 @@ app.delete('/api/product/:productId', async (req, res) => {
 })
 
 
-//user collection apis 
-app.post('/api/user', async (req, res) => {
-    const user = req.body;
-    const result = await usersCollection.insertOne(user);
-    res.send(result);
-})
+
 
 app.get('/api/user/:uid', async (req, res) => {
     console.log('api user');
@@ -124,7 +119,12 @@ app.get('/api/user/:uid', async (req, res) => {
         res.status(404).send('data not found');
     }
 })
-
+//user collection api 
+app.put('/api/user/:email', async (req, res) => {
+    const user = req.body;
+    const result = await usersCollection.insertOne(user);
+    res.send(result);
+})
 //set cart data in user collection 
 app.patch('/api/user/:uid', async (req, res) => {
     const uid = req.params.uid;
