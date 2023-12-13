@@ -107,24 +107,24 @@ app.delete('/api/product/:productId', async (req, res) => {
 
 
 
-app.get('/api/user/:uid', async (req, res) => {
-    console.log('api user');
-    const uid = req.params.uid;
-    const filter = { uid: uid };
-    const result = await usersCollection.findOne(filter)
-    if (result) {
-        res.status(200).send(result);
-    }
-    else {
-        res.status(404).send('data not found');
-    }
-})
+// app.get('/api/user/:uid', async (req, res) => {
+//     console.log('api user');
+//     const uid = req.params.uid;
+//     const filter = { uid: uid };
+//     const result = await usersCollection.findOne(filter)
+//     if (result) {
+//         res.status(200).send(result);
+//     }
+//     else {
+//         res.status(404).send('data not found');
+//     }
+// })
 //user collection api 
-app.put('/api/user/:email', async (req, res) => {
-    const user = req.body;
-    const result = await usersCollection.insertOne(user);
-    res.send(result);
-})
+// app.put('/api/user/:email', async (req, res) => {
+//     const user = req.body;
+//     const result = await usersCollection.insertOne(user);
+//     res.send(result);
+// })
 //set cart data in user collection 
 app.patch('/api/user/:uid', async (req, res) => {
     const uid = req.params.uid;
